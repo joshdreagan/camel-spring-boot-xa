@@ -1,0 +1,52 @@
+# Spring Boot
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration
+  jta:
+    log-dir: ./target/tx-object-store
+    narayana:
+      periodicRecoveryPeriod: 2
+      recoveryBackoffPeriod: 1
+      defaultTimeout: 300
+      recoveryDbUser: ${spring.datasource.username}
+      recoveryDbPass: ${spring.datasource.password}
+      recoveryJmsUser: ${spring.activemq.user}
+      recoveryJmsPass: ${spring.activemq.password}
+#  atomikos.properties:
+#      defaultJtaTimeout: 10000
+  activemq:
+    brokerUrl: tcp://localhost:61616?jms.rmIdFromConnectionId=true
+    user: admin
+    password: admin
+  datasource:
+    xa:
+      dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+    url: jdbc:mysql://localhost:3306/example?autoReconnect=true&useSSL=false
+    username: root
+    password: Abcd1234
+    schema: classpath:META-INF/sql/schema.sql
+    schemaUsername: ${spring.datasource.username}
+    schemaPassword: ${spring.datasource.password}
+
+# Camel Spring Boot
+camel:
+  springboot:
+    name: CamelSpringBootXa
+    main-run-controller: true
+  component:
+    jms:
+      recoveryInterval: 30000
+
+# Logging
+logging:
+  level:
+    com.atomikos: WARN
+
+# Application
+application:
+  file:
+    messagesDirectory: target/messages
+  jms:
+    messagesQueue: org.apache.camel.examples.MESSAGES
+  sql:
+    messagesTable: MESSAGES
