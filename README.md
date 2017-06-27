@@ -46,4 +46,4 @@ If the file successfully processed, you will see a message in the DB. You can ch
 
 ## Notes
 
-This project contains an org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory class implementation. It is the patched version from JIRA issue [ARTEMIS-1255](https://issues.apache.org/jira/browse/ARTEMIS-1255). It will have to be included until the patch is merged into the official codebase.
+This project contains an `org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory` class implementation. It is the patched version from JIRA issue [ARTEMIS-1255](https://issues.apache.org/jira/browse/ARTEMIS-1255). It will have to be included until the patch is merged into the official codebase.
