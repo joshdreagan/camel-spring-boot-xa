@@ -42,4 +42,4 @@ $ cd $PROJECT_ROOT
 $ cp src/test/data/message_01.txt target/messages/
 ```
 
-If the file successfully processed, you will see a message in the DB. You can check it using the SQL command `select * from example.MESSAGES;`.
+If the file successfully processed, you will see a message in the DB. You can check it using the SQL command `select * from example.MESSAGES;`. If the file threw an exception (because it had the word "error" in it), it will be retried until the `max-delivery-attempts` is exhausted and then be placed on the `DLQ`. Another route will then pick it up and log it.
