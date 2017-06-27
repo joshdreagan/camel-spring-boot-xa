@@ -43,3 +43,7 @@ $ cp src/test/data/message_01.txt target/messages/
 ```
 
 If the file successfully processed, you will see a message in the DB. You can check it using the SQL command `select * from example.MESSAGES;`. If the file threw an exception (because it had the word "error" in it), it will be retried until the `max-delivery-attempts` is exhausted and then be placed on the `DLQ`. Another route will then pick it up and log it.
+
+## Notes
+
+This project contains an org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory class implementation. It is the patched version from JIRA issue [ARTEMIS-1255](https://issues.apache.org/jira/browse/ARTEMIS-1255). It will have to be included until the patch is merged into the official codebase.
