@@ -23,7 +23,13 @@ public class CamelRouteConfiguration extends RouteBuilder {
       .routeId("messageProcessorRoute")
       .transacted("requiredTransactionPolicy")
       .to("sql:insert into {{application.sql.messagesTable}} values (:#${ref:uuid},:#${body},:#${date:now})?dataSource=#dataSource")
-      //.throwException(new java.lang.Exception())
+      .filter(simple("${body} contains 'error'"))
+        .throwException(new java.lang.Exception())
+    ;
+    
+    from("jms:queue:DLQ?connectionFactory=#nonXaJmsConnectionFactory")
+      .routeId("deadMessageProcessorRoute")
+      .log("DLQ Message: [${body}]")
     ;
   }
   
