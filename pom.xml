@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -24,20 +24,23 @@ limitations under the License.
 
   <packaging>jar</packaging>
 
+  <name>Camel Spring Boot XA</name>
   <description>An example project showing how to do XA transactions with Camel + Narayana on Spring Boot.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    
+
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
-    
+
+    <fabric8-maven-plugin.version>3.1.80</fabric8-maven-plugin.version>
+
     <camel.version>2.18.1</camel.version>
     <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
     <artemis.version>2.0.0</artemis.version>
   </properties>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -125,6 +128,11 @@ limitations under the License.
       </resource>
     </resources>
     <plugins>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <version>${fabric8-maven-plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

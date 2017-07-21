@@ -16,6 +16,7 @@ package org.apache.camel.examples;
 import java.util.UUID;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,20 +25,24 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Component
 public class CamelRouteConfiguration extends RouteBuilder {
 
+  @Autowired
+  private ApplicationProperties properties;
+  
   @Override
   public void configure() {
-    from("file:{{application.file.messagesDirectory}}")
+    fromF("file:%s", properties.getFile().getMessagesDirectory())
       .routeId("fileConsumerRoute")
       .convertBodyTo(String.class)
-      .to("jms:queue:{{application.jms.messagesQueue}}?connectionFactory=#nonXaJmsConnectionFactory")
+      .toF("jms:queue:%s?connectionFactory=#nonXaJmsConnectionFactory", properties.getJms().getMessagesQueue())
     ;
     
-    from("jms:queue:{{application.jms.messagesQueue}}?connectionFactory=#xaJmsConnectionFactory&transacted=true&transactionManager=#transactionManager")
+    fromF("jms:queue:%s?connectionFactory=#xaJmsConnectionFactory&transacted=true&transactionManager=#transactionManager", properties.getJms().getMessagesQueue())
       .routeId("messageProcessorRoute")
       .transacted("requiredTransactionPolicy")
-      .to("sql:insert into {{application.sql.messagesTable}} values (:#${ref:uuid},:#${body},:#${date:now})?dataSource=#dataSource")
+      .toF("sql:insert into %s values (:#${ref:uuid},:#${body},:#${date:now})?dataSource=#dataSource", properties.getSql().getMessagesTable())
       .filter(simple("${body} contains 'error'"))
         .throwException(new java.lang.Exception())
+      .end()
     ;
     
     from("jms:queue:DLQ?connectionFactory=#nonXaJmsConnectionFactory")

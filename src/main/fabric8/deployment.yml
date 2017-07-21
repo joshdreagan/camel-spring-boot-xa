@@ -1,0 +1,53 @@
+spec:
+  template:
+    spec:
+      serviceAccountName: camel-spring-boot-xa-sa
+      containers:
+      - name: camel-spring-boot-xa
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: file:/etc/config/
+        - name: KUBERNETES_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: SPRING_ARTEMIS_USER
+          valueFrom:
+            secretKeyRef:
+              name: camel-spring-boot-xa-secret
+              key: spring.artemis.user
+        - name: SPRING_ARTEMIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: camel-spring-boot-xa-secret
+              key: spring.artemis.password
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: camel-spring-boot-xa-secret
+              key: spring.datasource.username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: camel-spring-boot-xa-secret
+              key: spring.datasource.password
+        resources:
+          requests:
+            cpu: "0.2"
+          limits:
+            cpu: "4.0"
+        volumeMounts:
+        - name: camel-spring-boot-xa-configmap-vol
+          mountPath: /etc/config
+          readOnly: true
+        - name: camel-spring-boot-xa-vol
+          mountPath: /mnt
+          readOnly: false
+      volumes:
+      - name: camel-spring-boot-xa-configmap-vol
+        configMap:
+          name: camel-spring-boot-xa-configmap
+      - name: camel-spring-boot-xa-vol
+        persistentVolumeClaim:
+          claimName: camel-spring-boot-xa-pvc
+            
